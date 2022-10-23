@@ -5,6 +5,8 @@ import cors from 'cors';
 
 import connectDB from './db/connect';
 
+import routes from './routes/api/v1'
+
 dotenv.config();
 
 const app: Express = express();
@@ -25,6 +27,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Sanitize request data
 app.use(ExpressMongoSanitize());
+
+// v1 api routes
+app.use('/api/v1', routes);
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
