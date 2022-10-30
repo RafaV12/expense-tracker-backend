@@ -31,6 +31,27 @@ export const createTx = catchAsync(async (req: IRequest, res: Response) => {
   return res.status(httpStatus.OK).json(allTxs);
 });
 
+export const deleteTx = catchAsync(async (req: IRequest, res: Response) => {
+  const { txId } = req.params;
+  const { userId } = req;
+
+  // Delete transaction from user's transactions
+  await User.updateOne(
+    { id: userId },
+    {
+      $pullAll: {
+        transactions: [txId],
+      },
+    }
+  );
+
+  await Tx.findByIdAndDelete({ _id: txId });
+
+  const allTxs = await Tx.find({ userId });
+
+  return res.status(httpStatus.OK).json(allTxs);
+});
+
 export const getAllTxFromMonth = catchAsync(async (req: IRequest, res: Response) => {
   const { month } = req.params;
   const { userId } = req;
