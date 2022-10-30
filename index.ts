@@ -4,8 +4,9 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 
 import connectDB from './db/connect';
+import routes from './routes/v1';
 
-import routes from './routes/api/v1'
+import { notFound } from './middlewares/not-found';
 
 dotenv.config();
 
@@ -29,7 +30,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(ExpressMongoSanitize());
 
 // v1 api routes
-app.use('/api/v1', routes);
+app.use('/v1', routes);
+
+// Error middlewares
+app.use(notFound);
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
