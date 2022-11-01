@@ -3,13 +3,24 @@ import httpStatus from 'http-status-codes';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-import config from '../config/config';
 import { Payload } from '../types';
 import User from '../models/User';
 import catchAsync from '../utils/catchAsync';
 
 export const registerUser = catchAsync(async (req: Request, res: Response) => {
   const { username, password } = req.body;
+
+  // Input validation (Can be improved!)
+  let spChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+  if (!username || !password) {
+    return res.status(httpStatus.BAD_REQUEST).json({ message: 'Username and Password are required!' });
+  }
+  if (spChars.test(username)) {
+    return res.status(httpStatus.BAD_REQUEST).json({ message: 'Special chars in Username are not allowed' });
+  }
+  if (username.length < 6 || password.length < 8) {
+    return res.status(httpStatus.BAD_REQUEST).json({ message: 'Username length: at least 6 chars. Password length: at least 8 chars' });
+  }
 
   const userExist = await User.findOne({ username: username.toLowerCase() });
 
@@ -28,9 +39,8 @@ export const registerUser = catchAsync(async (req: Request, res: Response) => {
       userId: user.id,
     };
 
-    const token = jwt.sign(payload, config.JWT_SECRET, { expiresIn: config.JWT_LIFETIME });
-
-    return res.status(httpStatus.OK).json({ token });
+    const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: process.env.JWT_LIFETIME as string });
+    return res.status(httpStatus.OK).json({ msg: 'hehe' });
   }
 
   return res.status(httpStatus.CONFLICT).json({
@@ -54,8 +64,6 @@ export const loginUser = catchAsync(async (req: Request, res: Response) => {
   if (!isPasswordCorrect) {
     return res.status(httpStatus.NOT_FOUND).json({
       message: 'Oops! Username or password is wrong!',
-      code: 404,
-      field: 'username or password',
     });
   }
 
@@ -63,7 +71,7 @@ export const loginUser = catchAsync(async (req: Request, res: Response) => {
     userId: user.id,
   };
 
-  const token = jwt.sign(payload, config.JWT_SECRET, { expiresIn: config.JWT_LIFETIME });
+  const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: process.env.JWT_LIFETIME as string });
 
   res.status(httpStatus.OK).json({ token });
 });

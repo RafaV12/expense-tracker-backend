@@ -1,5 +1,5 @@
 import express, { Express } from 'express';
-import ExpressMongoSanitize from 'express-mongo-sanitize';
+import mongoSanitize from 'express-mongo-sanitize';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Sanitize request data
-app.use(ExpressMongoSanitize());
+app.use(mongoSanitize());
 
 // v1 api routes
 app.use('/v1', routes);

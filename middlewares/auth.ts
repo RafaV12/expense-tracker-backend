@@ -1,5 +1,4 @@
 import { Response, NextFunction } from 'express';
-import config from '../config/config';
 import jwt from 'jsonwebtoken';
 import httpStatus from 'http-status-codes';
 import { Payload, IRequest } from '../types';
@@ -15,7 +14,7 @@ export default function (req: IRequest, res: Response, next: NextFunction) {
 
   // Verify token
   try {
-    const payload: Payload | any = jwt.verify(token, config.JWT_SECRET);
+    const payload: Payload | any = jwt.verify(token, process.env.JWT_SECRET as string);
     req.userId = payload.userId;
     next();
   } catch (err) {
