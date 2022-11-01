@@ -40,7 +40,7 @@ export const registerUser = catchAsync(async (req: Request, res: Response) => {
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: process.env.JWT_LIFETIME as string });
-    return res.status(httpStatus.OK).json({ msg: 'hehe' });
+    return res.status(httpStatus.OK).json({ token });
   }
 
   return res.status(httpStatus.CONFLICT).json({
