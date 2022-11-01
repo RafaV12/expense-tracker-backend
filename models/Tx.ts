@@ -2,6 +2,7 @@ import { Document, model, Schema } from 'mongoose';
 
 /**
  * Interface to model the User Schema for TypeScript.
+ * @param userId:Schema.Types.ObjectId
  * @param type:string
  * @param description:string
  * @param date:string
@@ -9,6 +10,7 @@ import { Document, model, Schema } from 'mongoose';
  */
 
 export interface ITx extends Document {
+  userId: Schema.Types.ObjectId;
   type: string;
   description: string;
   date: string;
@@ -16,6 +18,10 @@ export interface ITx extends Document {
 }
 
 const txSchema: Schema = new Schema<ITx>({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
   type: {
     type: String,
     required: true,
