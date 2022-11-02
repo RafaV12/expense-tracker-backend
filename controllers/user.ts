@@ -14,7 +14,6 @@ export const createTx = catchAsync(async (req: IRequest, res: Response) => {
 
   const user = await User.findOne({ id: userId });
 
-  // Create new transaction
   const tx = await Tx.create({
     userId,
     type,
@@ -29,6 +28,20 @@ export const createTx = catchAsync(async (req: IRequest, res: Response) => {
   const allTxs = await Tx.find({ userId });
 
   return res.status(httpStatus.OK).json(allTxs);
+});
+
+export const updateTx = catchAsync(async (req: IRequest, res: Response) => {
+  const { _id, type, date, description, amount } = req.body;
+
+  // If transaction exists, update it
+  const tx = await Tx.findOne({ _id });
+  if (tx) {
+    await Tx.updateOne({ _id }, { $set: { type, date, description, amount } });
+
+    return res.status(httpStatus.OK).json({ tx });
+  }
+
+  return res.status(httpStatus.NOT_FOUND).json({ message: 'Transaction does not exist!' });
 });
 
 export const deleteTx = catchAsync(async (req: IRequest, res: Response) => {
