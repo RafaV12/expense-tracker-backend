@@ -13,9 +13,7 @@ export const createTx = catchAsync(async (req: IRequest, res: Response) => {
   const { userId } = req;
 
   // Validation
-  if (type !== 'Expense' || type !== 'Income') {
-    return res.status(httpStatus.BAD_REQUEST).json({ message: 'Unknown type of transaction' });
-  } else if (description.length > 34) {
+  if (description.length > 34) {
     return res.status(httpStatus.BAD_REQUEST).json({ message: 'Description is too long!' });
   } else if (amount > 1000000000) {
     return res.status(httpStatus.BAD_REQUEST).json({ message: 'Amount is too big!' });
@@ -43,9 +41,7 @@ export const updateTx = catchAsync(async (req: IRequest, res: Response) => {
   const { _id, type, date, description, amount } = req.body;
 
   // Validation
-  if (type !== 'Expense' || type !== 'Income') {
-    return res.status(httpStatus.BAD_REQUEST).json({ message: 'Unknown type of transaction' });
-  } else if (description.length > 34) {
+  if (description.length > 34) {
     return res.status(httpStatus.BAD_REQUEST).json({ message: 'Description is too long!' });
   } else if (amount > 1000000000) {
     return res.status(httpStatus.BAD_REQUEST).json({ message: 'Amount is too big!' });

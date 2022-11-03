@@ -12,5 +12,5 @@ yarn-error.log
 # Code coverage
 coverage
 
-# bunlde folder
+# bundle folder
 /dist
